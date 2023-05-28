@@ -23,7 +23,7 @@ export default class RunApp {
         this.app.get('/', (req, res) => {
             res.json({ status: 'succes' })
         })
-        this.app.get('/videos', (req, res) => {
+        this.app.get('/video', (req, res) => {
             fs.stat(this.videoPath, (err, stats) => {
                 if (err) {
                     console.log(err)

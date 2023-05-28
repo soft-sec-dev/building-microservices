@@ -6,3 +6,4 @@
 - `docker run -dp 3000:3000 bmdksergio1.azurecr.io/video-streaming:latest`
 
 ## Chap-4
+- `docker-compose down && docker-compose up --build` *Restart automatically*
