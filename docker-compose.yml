@@ -1,5 +1,11 @@
 version: '3'
 services:
+  db:
+    image: mongo:4.2.8
+    container_name: db
+    ports:
+      - "4000:27017"
+    restart: always
   azure-storage:
     image: video-storage
     build: 
@@ -7,9 +13,9 @@ services:
       dockerfile: Dockerfile
     container_name: video-storage
     ports:
-      - "4000:4000"
+      - "4001:4001"
     environment:
-      - PORT=4000
+      - PORT=4001
       - STORAGE_ACCOUNT_NAME=bmdksergio1
       - STORAGE_ACCESS_KEY=mNAxjsUknOpY37NPJlIG72fx3pTxLUHSo1IQoPkaJJS6XTZ3MP2SRgVVZZQLezLiXjzPsLYll7lq+ASt/qxRfA==
       
@@ -20,9 +26,11 @@ services:
       dockerfile: Dockerfile
     container_name: video-streaming
     ports:
-      - "4001:4001"
+      - "4002:4002"
     environment:
-      - PORT=4001
+      - PORT=4002
       - VIDEO_STORAGE_HOST=video-storage
-      - VIDEO_STORAGE_PORT=4000
+      - VIDEO_STORAGE_PORT=4001
+      - URI=mongodb://db:27017
     restart: "no"
+# conect to compas->localhost = mongodb://localhost:4000
