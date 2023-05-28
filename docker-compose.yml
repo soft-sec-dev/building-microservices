@@ -1,5 +1,16 @@
 version: '3'
 services:
+  azure-storage:
+    image: video-storage
+    build: 
+      context: ./video-storage
+      dockerfile: Dockerfile
+    container_name: video-storage
+    ports:
+      - "4000:4000"
+    environment:
+      - STORAGE_ACCOUNT_NAME=bmdksergio1
+      - STORAGE_ACCESS_KEY=mNAxjsUknOpY37NPJlIG72fx3pTxLUHSo1IQoPkaJJS6XTZ3MP2SRgVVZZQLezLiXjzPsLYll7lq
   video-streaming:
     image: video-streaming
     build: 
@@ -7,7 +18,9 @@ services:
       dockerfile: Dockerfile
     container_name: video-streaming
     ports:
-      - "4000:4000"
+      - "4001:4001"
     environment:
-      - PORT=4000
+      - PORT=4001
+      - VIDEO_STORAGE_HOST=video-storage
+      - VIDEO_STORAGE_PORT=4000
     restart: "no"
