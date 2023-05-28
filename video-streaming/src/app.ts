@@ -1,13 +1,15 @@
 import express from 'express'
 import { Express, Request, Response, RequestHandler } from 'express'
-import fs from 'node:fs'
+import http from 'node:http'
 import morgan from 'morgan'
 import path from 'node:path'
 
 export default class RunApp {
     private app: Express = express()
     private PORT: undefined | number | string = process.env.PORT || 3000
-    private videoPath = path.join(__dirname, "../videos/SampleVideo_1280x720_1mb.mp4")
+    // private videoPath = path.join(__dirname, "../videos/SampleVideo_1280x720_1mb.mp4")
+    private VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST || 'video-storage '
+    private VIDEO_STORAGE_PORT = parseInt(process.env.VIDEO_STORAGE_PORT as string)
 
     constructor() {
         this.initializeMiddlewares()
@@ -24,18 +26,18 @@ export default class RunApp {
             res.json({ status: 'succes' })
         })
         this.app.get('/video', (req, res) => {
-            fs.stat(this.videoPath, (err, stats) => {
-                if (err) {
-                    console.log(err)
-                    res.status(500).send('Error on load video')
-                    return
-                }
-                res.writeHead(200, {
-                    "Content-Length": stats.size,
-                    "Content-Type": "video/mp4",
+            const forwardRequest = http.request({
+                host: this.VIDEO_STORAGE_HOST,
+                port: this.VIDEO_STORAGE_PORT,
+                path: '/video?path=SampleVideo_1280x720_1mb.mp4',
+                method: 'GET',
+                headers: req.headers
+            },
+                forwardResponse => {
+                    res.writeHead(forwardResponse.statusCode as number, forwardResponse.headers)
+                    forwardResponse.pipe(res)
                 })
-                fs.createReadStream(this.videoPath).pipe(res)
-            })
+            req.pipe(forwardRequest)
         })  
     }
 
