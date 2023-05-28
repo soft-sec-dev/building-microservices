@@ -4,9 +4,9 @@ import azure from 'azure-storage'
 
 export default class VideoStorage {
     private app: Express = express()
-    private PORT = process.env.PORT || 4001
-    private STORAGE_ACCOUNT_NAME = process.env.STORAGE_ACCOUNT_NAME as string || 'bmdksergio1'
-    private STORAGE_ACCESS_KEY = process.env.STORAGE_ACCESS_KEY as string || 'mNAxjsUknOpY37NPJlIG72fx3pTxLUHSo1IQoPkaJJS6XTZ3MP2SRgVVZZQLezLiXjzPsLYll7lq+ASt/qxRfA=='
+    private PORT = process.env.PORT
+    private STORAGE_ACCOUNT_NAME = process.env.STORAGE_ACCOUNT_NAME as string
+    private STORAGE_ACCESS_KEY = process.env.STORAGE_ACCESS_KEY as string
     constructor() {
         this.initializeMiddlewares()
         this.initializeRoutes()

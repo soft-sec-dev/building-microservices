@@ -6,9 +6,9 @@ import path from 'node:path'
 
 export default class RunApp {
     private app: Express = express()
-    private PORT: undefined | number | string = process.env.PORT || 3000
+    private PORT: undefined | number | string = process.env.PORT 
     // private videoPath = path.join(__dirname, "../videos/SampleVideo_1280x720_1mb.mp4")
-    private VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST || 'video-storage '
+    private VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST
     private VIDEO_STORAGE_PORT = parseInt(process.env.VIDEO_STORAGE_PORT as string)
 
     constructor() {

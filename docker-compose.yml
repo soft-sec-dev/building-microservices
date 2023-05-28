@@ -9,8 +9,10 @@ services:
     ports:
       - "4000:4000"
     environment:
+      - PORT=4000
       - STORAGE_ACCOUNT_NAME=bmdksergio1
-      - STORAGE_ACCESS_KEY=mNAxjsUknOpY37NPJlIG72fx3pTxLUHSo1IQoPkaJJS6XTZ3MP2SRgVVZZQLezLiXjzPsLYll7lq
+      - STORAGE_ACCESS_KEY=mNAxjsUknOpY37NPJlIG72fx3pTxLUHSo1IQoPkaJJS6XTZ3MP2SRgVVZZQLezLiXjzPsLYll7lq+ASt/qxRfA==
+      
   video-streaming:
     image: video-streaming
     build: 
