@@ -1,4 +1,9 @@
 import RunApp from "./src/app";
 
 const app = new RunApp()
-app.listen()
+app.main()
+    .then(() => { console.log('Microservices is running') })
+    .catch(err => {
+        console.log("Microservices failed to load")
+        console.log(err && err.stack || err)
+    })

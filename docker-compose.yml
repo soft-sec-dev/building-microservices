@@ -31,6 +31,7 @@ services:
       - PORT=4002
       - VIDEO_STORAGE_HOST=video-storage
       - VIDEO_STORAGE_PORT=4001
-      - URI=mongodb://db:27017
+      - DBHOST=mongodb://db:27017
+      - DBNAME=video-streaming
     restart: "no"
 # conect to compas->localhost = mongodb://localhost:4000
