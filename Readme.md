@@ -7,3 +7,7 @@
 
 ## Chap-4
 - `docker-compose down && docker-compose up --build` *Restart automatically*
+
+## Chap-5
+- RabbitMq vs Http
+- Indirect vs direct message
