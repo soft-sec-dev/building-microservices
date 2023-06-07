@@ -11,4 +11,3 @@
 ## Chap-5
 - RabbitMq vs Http
 - Indirect vs direct message
-- Remove
