@@ -34,4 +34,19 @@ services:
       - DBHOST=mongodb://db:27017
       - DBNAME=video-streaming
     restart: "no"
+  history:
+    image: history
+    build: 
+      context: ./history
+      dockerfile: Dockerfile-dev
+    container_name: history
+    volumes:
+      - /tmp/history/npm-cache:/root/.npm:z
+      - ./history/src:/usr/src/app/src:z
+    ports:
+      - "4003:4003"
+    environment:
+      - PORT=4003
+      - NODE_ENV=development
+    restart: "no"
 # conect to compas->localhost = mongodb://localhost:4000
