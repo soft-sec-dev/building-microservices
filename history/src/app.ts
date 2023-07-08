@@ -26,7 +26,7 @@ export class HistoryApp {
     }
 
     public main(): Promise<unknown> {
-        console.log("Hello Wolrd")
+        console.log("Hello Wolrd 2")
         return this.startHttpServer()
     }
 }

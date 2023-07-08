@@ -41,8 +41,8 @@ services:
       dockerfile: Dockerfile-dev
     container_name: history
     volumes:
-      - /tmp/history/npm-cache:/root/.npm:z
-      - ./history/src:/usr/src/app/src:z
+      # - ./:/root/.npm:z
+      - ./history:/usr/src:z
     ports:
       - "4003:4003"
     environment:

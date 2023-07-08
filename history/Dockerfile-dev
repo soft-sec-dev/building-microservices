@@ -1,6 +1,5 @@
-FROM node:12.18.1-alpine                     
-WORKDIR /usr/src/app
-COPY package*.json ./                        
-CMD npm config set cache-min 9999999 && \    
-    npm install && \                         
-    npm run start:dev     
+FROM node:18-alpine                  
+WORKDIR /usr/src
+COPY package*.json ./
+RUN npm install
+CMD ls -la; pwd; npm run dev
