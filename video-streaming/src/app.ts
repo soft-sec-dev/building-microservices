@@ -6,7 +6,7 @@ import { MongoClient, ObjectId, Collection, Document } from 'mongodb'
 
 export default class RunApp {
     private app: Express = express()
-    private PORT: undefined | number | string = process.env.PORT 
+    private PORT: undefined | number | string = process.env.PORT
     // private videoPath = path.join(__dirname, "../videos/SampleVideo_1280x720_1mb.mp4")
     private VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST
     private VIDEO_STORAGE_PORT = parseInt(process.env.VIDEO_STORAGE_PORT as string)
@@ -47,11 +47,31 @@ export default class RunApp {
                     forwardResponse => {
                         res.writeHead(forwardResponse.statusCode as number, forwardResponse.headers)
                         forwardResponse.pipe(res)
-                    })
+                    }
+                )
                 req.pipe(forwardRequest)
             })
 
-        })  
+        })
+    }
+    public sendViewedMessage(videoPath: any) {
+        const postOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }
+        const requestBody = {
+            videoPath: videoPath
+        }
+        const req = http.request(  //? Request like {axios, fetch - just a way to comunicate miceroservices}
+            "http://history/viewed",
+            postOptions
+        )
+        req.on("close", () => { })
+        req.on("error", (err) => { })
+        req.write(JSON.stringify(requestBody)) //? Enviar el video, por medio del req.body
+        req.end()
     }
 
     private listen() {
