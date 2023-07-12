@@ -15,6 +15,8 @@ export default class RunApp {
     private cliente = new MongoClient(`${this.DBHOST}`)
     private collections: any
 
+    private  videoPath = "./videos/SampleVideo_1280x720_1mb.mp4";
+
     constructor() {
         this.initializeMiddlewares()
         this.initializeRoutes()
