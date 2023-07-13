@@ -3,16 +3,17 @@ import { Express, Request, Response, RequestHandler } from 'express'
 import http from 'node:http'
 import morgan from 'morgan'
 import { MongoClient, ObjectId, Collection, Document } from 'mongodb'
+import fs from 'node:fs'
 
 export default class RunApp {
     private app: Express = express()
-    private PORT: undefined | number | string = process.env.PORT
+    private PORT: undefined | number | string = process.env.PORT || 3000
     // private videoPath = path.join(__dirname, "../videos/SampleVideo_1280x720_1mb.mp4")
     private VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST
     private VIDEO_STORAGE_PORT = parseInt(process.env.VIDEO_STORAGE_PORT as string)
     private DBHOST = process.env.DBHOST as string
     private DBNAME = process.env.DBNAME
-    private cliente = new MongoClient(`${this.DBHOST}`)
+    // private cliente = new MongoClient(`${this.DBHOST}`)
     private collections: any
 
     private  videoPath = "./videos/SampleVideo_1280x720_1mb.mp4";
@@ -31,29 +32,20 @@ export default class RunApp {
             res.json({ status: 'succes' })
         })
         this.app.get('/video', (req, res) => {
-            console.log(req.query.id)
-            const videoId = new ObjectId('64789cb59125d1364a520a76')
-            console.log(`Video id has been created: ${videoId}`)
-            this.collections.findOne({ _id: videoId }).then((videoRecord: any) => {
-                if (!videoRecord) {
-                    res.status(500).send({ status: 'failed', msg: 'error on findone collectios' })
-                    return
+            fs.stat(this.videoPath, (err, stats) => {
+                if (err) {
+                    console.error("An error occurred ");
+                    res.sendStatus(500);
+                    return;
                 }
-                const forwardRequest = http.request({
-                    host: this.VIDEO_STORAGE_HOST,
-                    port: this.VIDEO_STORAGE_PORT,
-                    path: `/video?path${videoRecord.videoPath}=`,
-                    method: 'GET',
-                    headers: req.headers
-                },
-                    forwardResponse => {
-                        res.writeHead(forwardResponse.statusCode as number, forwardResponse.headers)
-                        forwardResponse.pipe(res)
-                    }
-                )
-                req.pipe(forwardRequest)
-            })
-
+        
+                res.writeHead(200, {
+                    "Content-Length": stats.size,
+                    "Content-Type": "video/mp4",
+                });
+        
+                fs.createReadStream(this.videoPath).pipe(res);
+            });
         })
     }
     public sendViewedMessage(videoPath: any) {
@@ -76,22 +68,22 @@ export default class RunApp {
         req.end()
     }
 
-    private listen() {
+    public listen() {
         this.app.listen(this.PORT, () => {
             console.log(`Running on: http://localhost:${this.PORT}/`)
         })
     }
-    public async main() {
-        try {
-            await this.cliente.connect()
-            const db = this.cliente.db(`${this.DBNAME}`)
-            this.collections = db.collection('videos')
+    // public async main() {
+    //     try {
+    //         await this.cliente.connect()
+    //         const db = this.cliente.db(`${this.DBNAME}`)
+    //         this.collections = db.collection('videos')
 
-            this.listen()
-            console.log('Colleccioens creadas')
-        } catch (err) {
-            console.error('Error al conectar a mongodb', err)
-        }
-    }
+    //         this.listen()
+    //         console.log('Colleccioens creadas')
+    //     } catch (err) {
+    //         console.error('Error al conectar a mongodb', err)
+    //     }
+    // }
 
 }
