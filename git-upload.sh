@@ -8,4 +8,4 @@ read COMMIT
 git add .
 git commit -m "$COMMIT"
 git push
-exit 0
+exit 
