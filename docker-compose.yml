@@ -48,5 +48,7 @@ services:
     environment:
       - PORT=4003
       - NODE_ENV=development
+      - DBHOST=mongodb://db:27017
+      - DBNAME=history
     restart: "no"
 # conect to compas->localhost = mongodb://localhost:4000

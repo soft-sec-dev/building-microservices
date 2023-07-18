@@ -1,8 +1,13 @@
 import express, { Express, Request, Response } from 'express'
 import morgan from 'morgan'
-import { Db } from 'mongodb'
+import { Db, MongoClient, ReturnDocument } from 'mongodb'
+import mongodb from 'mongodb'
 export class HistoryApp {
     private app: Express = express()
+    private DBHOST = process.env.DBHOST as string
+    private DBNAME = process.env.DBNAME
+    private client = new MongoClient(`${this.DBHOST}`)
+    private collections:any
     constructor() {
         this.initilizeMiddelwares()
     }
@@ -29,9 +34,10 @@ export class HistoryApp {
                     })
         })
     }
-    private startHttpServer(): Promise<unknown> {
+
+    private startHttpServer(db:Db): Promise<unknown> {
         return new Promise<void>((resolve, reject) => {
-            this.setupHandlers(this.app)
+            this.setupHandlers(this.app, db)
             const port = process.env.PORT || 4003
             this.app.listen(port, () => {
                 resolve()
@@ -39,8 +45,13 @@ export class HistoryApp {
         })
     }
 
-    public main(): Promise<unknown> {
-        console.log("Hello Wolrd 2")
-        return this.startHttpServer()
+    public async main() {
+        try{
+            await this.client.connect()
+            const db = this.client.db(`${this.DBNAME}`)
+            this.collections = db.collection('videos')
+        }catch(err){
+            console.log('Error al conectarse a mondodb en HISTORY', err)
+        }
     }
 }
