@@ -11,3 +11,6 @@
 ## Chap-5
 - RabbitMq vs Http
 - Indirect vs direct message
+
+## Chap-5.1
+- Http -> direct messaje using `http.request - Post`
