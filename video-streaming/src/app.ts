@@ -40,7 +40,7 @@ export default class RunApp {
         };
     
         const req = http.request( // Send the "viewed" message to the history microservice.
-            "http://history/viewed",
+            "http://history:4002/viewed",
             postOptions
         );
     
