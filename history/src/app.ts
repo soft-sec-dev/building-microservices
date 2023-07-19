@@ -1,6 +1,8 @@
 import express, { Express, Request, Response } from 'express'
 import morgan from 'morgan'
 import mongodb,{Db, MongoClient} from 'mongodb'
+import bodyParser from 'body-parser'
+
 export class HistoryApp {
     private app: Express = express()
     private port = process.env.PORT || 4003
@@ -14,6 +16,7 @@ export class HistoryApp {
 
     private initilizeMiddelwares(): void {
         this.app.use(express.json())
+        this.app.use(bodyParser.json())
         this.app.use(morgan('dev'))
     }
 

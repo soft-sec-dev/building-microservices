@@ -16,23 +16,55 @@ export default class RunApp {
     // private cliente = new MongoClient(`${this.DBHOST}`)
     private collections: any
 
-    private  videoPath = "./videos/SampleVideo_1280x720_1mb.mp4";
+    private videoPath = "./videos/SampleVideo_1280x720_1mb.mp4";
 
     constructor() {
         this.initializeMiddlewares()
-        this.initializeRoutes()
     }
 
     private initializeMiddlewares() {
         this.app.use(morgan('dev'))
         this.app.use(express.json())
     }
-    private initializeRoutes() {
-        this.app.get('/', (req, res) => {
-            res.json({ status: 'succes' })
+   
+    private sendViewedMessage(videoPath:string){
+        const postOptions = { // Options to the HTTP POST request.
+            method: "POST", // Sets the request method as POST.
+            headers: {
+                "Content-Type": "application/json", // Sets the content type for the request's body.
+            },
+        };
+    
+        const requestBody = { // Body of the HTTP POST request.
+            videoPath: videoPath 
+        };
+    
+        const req = http.request( // Send the "viewed" message to the history microservice.
+            "http://history/viewed",
+            postOptions
+        );
+    
+        req.on("close", () => {
+            console.log("Sent 'viewed' message to history microservice.");
+        });
+    
+        req.on("error", (err) => {
+            console.error("Failed to send 'viewed' message!");
+            console.error(err && err.stack || err);
+        });
+    
+        req.write(JSON.stringify(requestBody)); // Write the body to the request.
+        req.end(); // End the request.
+    }
+
+    private setupHandlers(app:Express){
+        app.get('/', (req,res)=>{
+            res.send({data:'nothing for now', msg:'ok'})
         })
-        this.app.get('/video', (req, res) => {
-            fs.stat(this.videoPath, (err, stats) => {
+        app.get("/video", (req, res) => { // Route for streaming video.
+
+            const videoPath = "./videos/SampleVideo_1280x720_1mb.mp4";
+            fs.stat(videoPath, (err, stats) => {
                 if (err) {
                     console.error("An error occurred ");
                     res.sendStatus(500);
@@ -44,47 +76,26 @@ export default class RunApp {
                     "Content-Type": "video/mp4",
                 });
         
-                fs.createReadStream(this.videoPath).pipe(res);
-                this.sendViewedMessage(this.videoPath)
+                fs.createReadStream(videoPath).pipe(res);
+    
+                this.sendViewedMessage(videoPath); // Send message to "history" microservice that this video has been "viewed".
             });
-        })
-    }
-    private sendViewedMessage(videoPath: any) {
-        const postOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }
-        const requestBody = {
-            videoPath: videoPath
-        }
-        const req = http.request(  //? Request like {axios, fetch - just a way to comunicate miceroservices}
-            "http://history/viewed",
-            postOptions
-        )
-        req.on("close", () => { })
-        req.on("error", (err) => { })
-        req.write(JSON.stringify(requestBody)) //? Enviar el video, por medio del req.body
-        req.end()
+        });
     }
 
-    public listen() {
-        this.app.listen(this.PORT, () => {
-            console.log(`Running on: http://localhost:${this.PORT}/`)
-        })
+    public startHttpServer(){
+        return new Promise(resolve => { // Wrap in a promise so we can be notified when the server has started.
+            const app = express();
+            this.setupHandlers(app);
+            
+            const port = process.env.PORT && parseInt(process.env.PORT) || 3000;
+            app.listen(port, () => {
+                resolve(String);
+            });
+        });
     }
-    // public async main() {
-    //     try {
-    //         await this.cliente.connect()
-    //         const db = this.cliente.db(`${this.DBNAME}`)
-    //         this.collections = db.collection('videos')
 
-    //         this.listen()
-    //         console.log('Colleccioens creadas')
-    //     } catch (err) {
-    //         console.error('Error al conectar a mongodb', err)
-    //     }
-    // }
-
+    public main(){
+        return this.startHttpServer()
+    }
 }

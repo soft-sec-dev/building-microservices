@@ -7,4 +7,9 @@ const app = new RunApp()
 //         console.log("Microservices failed to load")
 //         console.log(err && err.stack || err)
 //     })
-app.listen()
+app.main()
+  .then(() => console.log("Microservice online."))
+  .catch(err => {
+    console.error("Microservice failed to start.");
+    console.error(err && err.stack || err);
+  });
