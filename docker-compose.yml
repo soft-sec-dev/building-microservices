@@ -26,9 +26,9 @@ services:
       dockerfile: Dockerfile
     container_name: video-streaming
     ports:
-      - "4002:4002"
+      - "4001:4001"
     environment:
-      - PORT=4002
+      - PORT=4001
       - VIDEO_STORAGE_HOST=video-storage
       - VIDEO_STORAGE_PORT=4001
       - DBHOST=mongodb://db:27017
@@ -44,9 +44,9 @@ services:
       # - ./:/root/.npm:z
       - ./history:/usr/src:z
     ports:
-      - "4003:4003"
+      - "4002:4002"
     environment:
-      - PORT=4003
+      - PORT=4002
       - NODE_ENV=development
       - DBHOST=mongodb://db:27017
       - DBNAME=history

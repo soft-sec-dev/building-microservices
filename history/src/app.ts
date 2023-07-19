@@ -24,7 +24,7 @@ export class HistoryApp {
             res.status(200).json({data:'nothing for now', msg:'ok'})
         })
     
-        this.app.post('viewed', (req,res)=>{
+        this.app.post('/viewed', (req,res)=>{
             const videoPath = req.body.videoPath
             videosCollectios
                 .insertOne({videoPath:videoPath})

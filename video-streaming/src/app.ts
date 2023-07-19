@@ -45,10 +45,11 @@ export default class RunApp {
                 });
         
                 fs.createReadStream(this.videoPath).pipe(res);
+                this.sendViewedMessage(this.videoPath)
             });
         })
     }
-    public sendViewedMessage(videoPath: any) {
+    private sendViewedMessage(videoPath: any) {
         const postOptions = {
             method: "POST",
             headers: {
