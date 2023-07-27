@@ -9,7 +9,6 @@ services:
   azure-storage:
     image: video-storage
     build: 
-      context: ./video-storage
       dockerfile: Dockerfile
     container_name: video-storage
     ports:
@@ -30,11 +29,11 @@ services:
       - ./video-streaming/src:/usr/src/app/src:z
       - ./video-streaming/videos:/usr/src/app/videos:z
     ports:
-      - "4001:4001"
+      - "4002:4002"
     environment:
-      - PORT=4001
+      - PORT=4002
       - VIDEO_STORAGE_HOST=video-storage
-      - VIDEO_STORAGE_PORT=4001
+      - VIDEO_STORAGE_PORT=4002
       - DBHOST=mongodb://db:27017
       - DBNAME=video-streaming
     restart: "no"
@@ -48,9 +47,9 @@ services:
       # - ./:/root/.npm:z
       - ./history:/usr/src:z
     ports:
-      - "4002:4002"
+      - "4003:4003"
     environment:
-      - PORT=4002
+      - PORT=4003
       - NODE_ENV=development
       - DBHOST=mongodb://db:27017
       - DBNAME=history
