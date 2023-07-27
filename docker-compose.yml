@@ -6,17 +6,18 @@ services:
     ports:
       - "4000:27017"
     restart: always
-  azure-storage:
-    image: video-storage
-    build: 
-      dockerfile: Dockerfile
-    container_name: video-storage
-    ports:
-      - "4001:4001"
-    environment:
-      - PORT=4001
-      - STORAGE_ACCOUNT_NAME=bmdksergio1
-      - STORAGE_ACCESS_KEY=mNAxjsUknOpY37NPJlIG72fx3pTxLUHSo1IQoPkaJJS6XTZ3MP2SRgVVZZQLezLiXjzPsLYll7lq+ASt/qxRfA==
+  # azure-storage:
+  #   image: video-storage
+  #   build: 
+  #     context: ./video-storage
+  #     dockerfile: Dockerfile
+  #   container_name: video-storage
+  #   ports:
+  #     - "4001:4001"
+  #   environment:
+  #     - PORT=4001
+  #     - STORAGE_ACCOUNT_NAME=bmdksergio1
+  #     - STORAGE_ACCESS_KEY=mNAxjsUknOpY37NPJlIG72fx3pTxLUHSo1IQoPkaJJS6XTZ3MP2SRgVVZZQLezLiXjzPsLYll7lq+ASt/qxRfA==
       
   video-streaming:
     image: video-streaming
@@ -29,11 +30,11 @@ services:
       - ./video-streaming/src:/usr/src/app/src:z
       - ./video-streaming/videos:/usr/src/app/videos:z
     ports:
-      - "4002:4002"
+      - "4001:4001"
     environment:
-      - PORT=4002
+      - PORT=4001
       - VIDEO_STORAGE_HOST=video-storage
-      - VIDEO_STORAGE_PORT=4002
+      - VIDEO_STORAGE_PORT=4001
       - DBHOST=mongodb://db:27017
       - DBNAME=video-streaming
     restart: "no"
@@ -47,9 +48,9 @@ services:
       # - ./:/root/.npm:z
       - ./history:/usr/src:z
     ports:
-      - "4003:4003"
+      - "4002:4002"
     environment:
-      - PORT=4003
+      - PORT=4002
       - NODE_ENV=development
       - DBHOST=mongodb://db:27017
       - DBNAME=history
